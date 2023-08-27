@@ -1,4 +1,4 @@
-* Deleting Terraform modules with direct provider blocks (legacy)
+# Deleting Terraform modules with direct provider blocks (legacy)
 
 If you are dealing with legacy Terraform syntax where provider blocks are written directly inside the modules, then you will run into issues if you simply remove the 'module' declaration from the main tf configuration.
 
