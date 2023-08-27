@@ -47,6 +47,7 @@ If you are attempting to remove a single legacy provider block inside a module a
 # if state is remote, download
 [[ -f terraform.tfstate ]] || terraform state pull > terraform.tfstate
 
+# variables for module name and provider source
 my_module="module.mymodule_legacysyntax"
 my_module_source="hashicorp/null"
 
