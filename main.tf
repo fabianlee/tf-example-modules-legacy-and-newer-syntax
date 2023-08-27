@@ -9,9 +9,9 @@ terraform {
 }
 
 # terraform destroy --target module.mymodule_legacysyntax
-#module mymodule_legacysyntax {
-#  source = "./module-legacy-syntax"
-#}
+module mymodule_legacysyntax {
+  source = "./module-legacy-syntax"
+}
 
 # terraform destroy --target module.mymodule_newersyntax
 module mymodule_newersyntax {
