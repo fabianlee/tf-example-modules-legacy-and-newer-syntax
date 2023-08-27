@@ -12,6 +12,9 @@ The proper order is to first remove the module from state, and only then remove 
 
 # example
 terraform destroy --auto-approve --target module.mymodule_legacysyntax
+
+# now apply should work again
+terraform apply
 ```
 
 If you removed the module declaration from main.tf first, you will get an error similar to below:
@@ -30,25 +33,36 @@ In this case, you need to add the module declaration back to your main configura
 
 ```
 terraform init --upgrade
-terraform destroy --target module.<moduleName>.<providerName>
+terraform destroy --auto-approve --target module.<moduleName>
+
+# should now be ok
+terraform apply
+```
+
+
+## Scenario 2: Removing single legacy provider block inside module
+
+If you are attempting to remove a single legacy provider block inside a module and get this error, then you need to reinclude the provider and its resources, then manually remove each resource state.
+
+```
+# if state is remote, download
+[[ -f terraform.tfstate ]] || terraform state pull > terraform.tfstate
 
 my_module="module.mymodule_legacysyntax"
 my_module_source="hashicorp/null"
 
-
-# use jq or yq to show resources tied to provider within module
-jq -r ".resources[] | select(.module == \"$my_module\" and .mode == \"managed\" and (.provider | contains(\"$my_module_source\")) ) | [.module,.type,.name] | @csv" terraform.tfstate
-yq ".resources[] | select(.module == \"$my_module\" and .mode == \"managed\" and (.provider | contains(\"$my_module_source\")) ) | [.module,.type,.name]" -o=csv terraform.tfstate
-
+#
+# use whichever parser you prefer (jq or yq) to identify resources to remove
+#
 # jq commands to print resource destruction commands for provider within module
 jq -r ".resources[] | select(.module == \"$my_module\" and .mode == \"managed\" and (.provider | contains(\"$my_module_source\")) ) | [.module,.type,.name] | @csv" terraform.tfstate | sed 's/\"//g; s/,/\./g' | xargs printf "terraform destroy --auto-approve --target %s\n"
 
 # yq commands to print resource destruction commands for provider within module
 yq e ".resources[] | select(.module == \"$my_module\" and .mode == \"managed\" and (.provider | contains(\"$my_module_source\")) ) | [.module,.type,.name]" terraform.tfstate -o=csv | sed 's/,/\./g' | xargs printf "terraform destroy --auto-approve --target %s\n"
+
+# rerun init
+terraform init --upgrade
+
+# now apply should work again
+terraform apply
 ```
-
-And only then remove the module declaration from your main.tf
-
-
-
-
