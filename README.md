@@ -7,8 +7,7 @@ If you are dealing with legacy Terraform syntax where provider blocks are writte
 The proper order is to first remove the module from state, and only then remove its module declaration from your main.tf
 
 ```
-# syntax
-#terraform destroy --target module.<moduleName>:
+# syntax: terraform destroy --target module.<moduleName>
 
 # example
 terraform destroy --auto-approve --target module.mymodule_legacysyntax
@@ -50,6 +49,8 @@ If you are attempting to remove a single legacy provider block inside a module a
 
 my_module="module.mymodule_legacysyntax"
 my_module_source="hashicorp/null"
+
+# syntax: terraform remove −−target module.<moduleName>.<resourceType>.<resourceName>
 
 #
 # use whichever parser you prefer (jq or yq) to identify resources to remove
