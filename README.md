@@ -1,4 +1,4 @@
-# Deleting Terraform modules with direct provider blocks (legacy)
+# Fixing 'Provider configuration not present' in modules using legacy provider blocks
 
 blog: https://fabianlee.org/2023/08/27/terraform-error-removing-module-containing-legacy-provider-block-provider-configuration-not-present/
 
